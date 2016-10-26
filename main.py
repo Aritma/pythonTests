@@ -2,60 +2,26 @@ from graphics import *
 import time
 
 """
-Dict class to encapsulate main working dictionary
-"""
-class Dict:
-
-    def __init__(self):
-        self.dict={}
-
-    def getDict(self):
-        return self.dict
-
-    def setDict(self,newDict):
-        self.dict.clear()
-        self.dict=newDict
-        return self.dict
-
-    def clear(self):
-        self.dict.clear()
-
-
-"""
-Cell class keep information of single cell values
-"""
-class Cell:
-
-    def __init__(self,x=0,y=0,size=10):
-        self.x=x
-        self.y=y
-        self.size=size
-        
-    def getPosition(self):
-        return self.x,self.y
-
-
-"""
-newCell function register cells in cellDict
-*args takes Cell object constructors
+register_cell function register cells in cellDict
+*args takes cell position (x,y)
 No return value
 """
-def newCell(cellDict,*args):
+def register_cell(cellDict,*args):
     for cell in args:
-        cellDict[cell.getPosition()]=cell
+        cellDict[cell]=True
 
 """
-newWindow function create game window and set its background
+new_window function create game window and set its background
 Return created window object
 """
-def newWindow(title,width,height):
+def new_window(title,width,height):
     _window=GraphWin(title,width,height,False)
     _window.setBackground("grey")
 
     return _window
 
 """
-checkLife function control cell life conditions and remove or create cells
+check_life function control cell life conditions and remove or create cells
 Conditions(source: https://en.wikipedia.org/wiki/Conway's_Game_of_Life):
  - Any live cell with fewer than two live neighbours dies, as if caused by under-population.
  - Any live cell with two or three live neighbours lives on to the next generation.
@@ -67,27 +33,28 @@ read all empty cells around existing structure and for valid positions create ne
 pass aliveTab into next generation
 No return value
 """
-def checkLife(cellDict,dictParrent):
+def check_life(cellDict):
     aliveTab={}
     for cell in cellDict:
-        neib=getCount(cellDict,cell[0],cell[1])
-        if neib==2 or neib==3:
-            newCell(aliveTab,Cell(cell[0],cell[1]))
+        neib=get_count(cellDict,cell[0],cell[1])
+        if neib in (2,3):
+            register_cell(aliveTab,Cell(cell[0],cell[1]))
             
-    emptyCells=getEmpty(cellDict)
+    emptyCells=get_empty(cellDict)
     for cell in emptyCells:
-        neib=getCount(cellDict,cell[0],cell[1])
+        neib=get_count(cellDict,cell[0],cell[1])
         if neib==3:
-            newCell(aliveTab,Cell(cell[0],cell[1]))
+            register_cell(aliveTab,Cell(cell[0],cell[1]))
 
-    dictParrent.setDict(aliveTab)
+    cellDict.clear()
+    cellDict.update(aliveTab)
 
 
 """
-getEmpty function check all existing cells and make list of adjescent empty positions
+get_empty function check all existing cells and make list of adjescent empty positions
 Return dictionary of empty positions
 """
-def getEmpty(cellDict):
+def get_empty(cellDict):
     _emptyCells={}
     for cell in cellDict:
         x=cell[0]
@@ -102,15 +69,16 @@ def getEmpty(cellDict):
     return _emptyCells
 
 """
-getCount count amount of living adjescent cells around target position
+get_count count amount of living adjescent cells around target position
 do not count itselfs
 Return count of cells
 """
-def getCount(cellDict,x,y):
+def get_count(cellDict,x,y):
     _count=0
     for a in [-1,0,1]:
         for b in [-1,0,1]:
-            if not (a==0 and b==0):
+            #if not (a==0 and b==0):
+            if not (a,b)==(0,0):
                 key=x+a,y+b
                 if key in cellDict:
                     _count+=1
@@ -119,14 +87,14 @@ def getCount(cellDict,x,y):
 
 
 """
-drawCells function draw existing cells in generation in window
+draw_cells function draw existing cells in generation in window
 before drawing new cell, function check last drawn cell and undraw those that do no exist in next generation
 after removing invalid cells, clears draw tab
 create Rectangle object for every existing cell and save it in drawn dictionary
 draw all Rectangles in drawn dict
 No return value
 """
-def drawCells(cellDict,scale,ofsX,ofsY,window,drawn):
+def draw_cells(cellDict,scale,size,ofsX,ofsY,window,drawn):
     for i in drawn:
         drawn[i].undraw()
     drawn.clear()
@@ -135,7 +103,6 @@ def drawCells(cellDict,scale,ofsX,ofsY,window,drawn):
     offsetY=window.height/2+ofsY
     
     for cell in cellDict:
-        size=cellDict[cell].size
         cx1=cell[0]*size
         cy1=cell[1]*size
         cx2=cx1+size
@@ -153,11 +120,11 @@ def drawCells(cellDict,scale,ofsX,ofsY,window,drawn):
 
 
 """
-listenKey function check if any key of predefined list was pressed
+listen_key function check if any key of predefined list was pressed
 called twice in code to increase chance of catching key event
 Return pressed key value
 """
-def listenKey(win):
+def listen_key(win):
     for _i in ("q","w","Right","Left","Up","Down"):
         if win.lastKey==_i:
             return _i
@@ -174,33 +141,31 @@ def main():
     repeat=0
     keyUsed=""
     drawn={}
-    d=Dict()
-    cellDict=d.getDict()
+    cellDict={}
 
-    win=newWindow("Game of life - test",800,600)
+    win=new_window("Game of life - test",800,600)
 
     """Infinite creation pattern ◘◘◘◘◘◘◘◘.◘◘◘◘◘...◘◘◘......◘◘◘◘◘◘◘.◘◘◘◘◘ """
-    newCell(cellDict,Cell(-14,0),Cell(-13,0),Cell(-12,0),Cell(-11,0))
-    newCell(cellDict,Cell(-10,0),Cell(-9,0),Cell(-8,0),Cell(-7,0))
-    newCell(cellDict,Cell(-5,0),Cell(-4,0),Cell(-3,0),Cell(-2,0),Cell(-1,0))
-    newCell(cellDict,Cell(3,0),Cell(4,0),Cell(5,0))
-    newCell(cellDict,Cell(12,0),Cell(13,0),Cell(14,0),Cell(15,0))
-    newCell(cellDict,Cell(16,0),Cell(17,0),Cell(18,0))
-    newCell(cellDict,Cell(20,0),Cell(21,0),Cell(22,0),Cell(23,0),Cell(24,0))
+    register_cell(cellDict,(-14,0),(-13,0),(-12,0),(-11,0))
+    register_cell(cellDict,(-10,0),(-9,0),(-8,0),(-7,0))
+    register_cell(cellDict,(-5,0),(-4,0),(-3,0),(-2,0),(-1,0))
+    register_cell(cellDict,(3,0),(4,0),(5,0))
+    register_cell(cellDict,(12,0),(13,0),(14,0),(15,0))
+    register_cell(cellDict,(16,0),(17,0),(18,0))
+    register_cell(cellDict,(20,0),(21,0),(22,0),(23,0),(24,0))
 
     while True:
-        cellDict=d.getDict()
 
         #draw only every 10th (or other number) generation, uncoment to use
         #if repeat%10==0:
-        drawCells(cellDict,scale,ofsX*(scale*10),ofsY*(scale*10),win,drawn)
+        draw_cells(cellDict,scale,size=10,ofsX*(scale*10),ofsY*(scale*10),win,drawn)
         win.redraw()
 
-        keyUsed=listenKey(win)
+        keyUsed=listen_key(win)
 
-        checkLife(cellDict,d)
+        check_life(cellDict)
 
-        keyUsed=listenKey(win)
+        keyUsed=listen_key(win)
 
         #time pause between next generation
         #problems with key event handling while using sleep
