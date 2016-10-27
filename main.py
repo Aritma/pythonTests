@@ -38,13 +38,13 @@ def check_life(cellDict):
     for cell in cellDict:
         neib=get_count(cellDict,cell[0],cell[1])
         if neib in (2,3):
-            register_cell(aliveTab,Cell(cell[0],cell[1]))
+            register_cell(aliveTab,(cell[0],cell[1]))
             
     emptyCells=get_empty(cellDict)
     for cell in emptyCells:
         neib=get_count(cellDict,cell[0],cell[1])
         if neib==3:
-            register_cell(aliveTab,Cell(cell[0],cell[1]))
+            register_cell(aliveTab,(cell[0],cell[1]))
 
     cellDict.clear()
     cellDict.update(aliveTab)
@@ -158,7 +158,7 @@ def main():
 
         #draw only every 10th (or other number) generation, uncoment to use
         #if repeat%10==0:
-        draw_cells(cellDict,scale,size=10,ofsX*(scale*10),ofsY*(scale*10),win,drawn)
+        draw_cells(cellDict,scale,10,ofsX*(scale*10),ofsY*(scale*10),win,drawn)
         win.redraw()
 
         keyUsed=listen_key(win)
