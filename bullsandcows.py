@@ -1,9 +1,9 @@
 import random
 
 def generateRandUnique(digits):
-    number=random.sample(range(0,9),digits)
+    number=random.sample(range(0,10),digits)
     while number[0]==0:
-        number=random.sample(range(0,9),digits)
+        number=random.sample(range(0,10),digits)
 
     print("Random number generated.")
     print("Random number contains " + str(digits) + " digits. Never starts with 0.")
