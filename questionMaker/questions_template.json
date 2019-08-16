@@ -1,0 +1,38 @@
+[
+    {
+        "text": "Kolik kol má automobil?",
+        "answers": [
+            {
+                "text": "Jedno"
+            },
+            {
+                "text": "3"
+            },
+            {
+                "text": "čtyři",
+                "correct": true
+            },
+            {
+                "text": "*čtyři, ale tučně* <- formátování s markdownem",
+                "correct": true
+            }
+        ],
+        "explanation": "Automobil má typicky čtyři kola (rezerva se nepočítá)"
+    },
+    {
+        "text": "Tahle otázka nemá \"explanation\" (vysvětlení)",
+        "answers": [
+            {
+                "text": "\"correct\" je nepovinné a může mít hodnotu `true` nebo `false`",
+                "correct": false
+            },
+            {
+                "text": "odpověď",
+                "correct": true
+            },
+            {
+                "text": "jiná odpověď"
+            }
+        ]
+    }
+]
