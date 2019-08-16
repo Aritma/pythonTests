@@ -1,5 +1,6 @@
 ### QuestionMaker5000
 Just for fun, because I need graphical tool to create ABCD tests.
+Supports UTF-8 (tested with CZ)
 
 ##**USAGE**
 
