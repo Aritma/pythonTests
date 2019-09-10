@@ -1,8 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 import json
-import sys
-import pprint
 
 inputFile = sys.argv[1]
 
@@ -95,7 +93,7 @@ tags = [ "0: Empty",
          "4: Proceses and Services",
          "5: Networks",
          "6: Advanced Linux",
-         "7: Scripting",
+         "7: Scripting and shell",
          "8: Databases",
          "9: Other"
          ]
@@ -103,7 +101,7 @@ tagList = ttk.Combobox(window, values=tags, width=50, background=bgcolor)
 
 
 #BUTTONS
-def submitMe():
+def clickSubmit():
     dataDict[index.get()]['text'] = questionTXTtext.get()
     dataDict[index.get()]['explanation'] = explTXTtext.get()
 
@@ -188,7 +186,7 @@ def clickGoTo():
         printInfo("Invalid value, use number")
 
 
-submitBTN = Button(window, text="Submit", command=submitMe, highlightbackground=bgcolor, foreground=textcolor)
+submitBTN = Button(window, text="Submit", command=clickSubmit, highlightbackground=bgcolor, foreground=textcolor)
 prevBTN = Button(fr, text='<', command=clickPrev, highlightbackground=bgcolor, foreground=textcolor)
 nextBTN = Button(fr, text='>', command=clickNext, highlightbackground=bgcolor, foreground=textcolor)
 lastBTN = Button(fr, text='Last', command=clickLast, highlightbackground=bgcolor, foreground=textcolor)
@@ -261,6 +259,38 @@ def clearView():
     dValid.set(0)
     dTXTtext.set("")
     tagList.current(0)
+
+#KEYBOARD SHOTRCUTS
+def subAndSaveSHRT(event):
+    clickSubmit()
+    clickSave()
+
+window.bind("<Control-s>", subAndSaveSHRT)
+
+def clearSHRT(event):
+    clickClear()
+
+window.bind("<Control-l>",clearSHRT)
+
+def newSHRT(event):
+    clickNew()
+
+window.bind("<Control-n>",newSHRT)
+
+def nextSHRT(event):
+    clickNext()
+
+#window.bind("<Control-right>",nextSHRT)
+
+def prevSHRT(event):
+    clickPrev()
+
+#window.bind("<Control-left>",prevSHRT)
+
+def testKey(event):
+    print(str(event.char))
+
+#window.bind("<KeyRelease>", testKey)
 
 #ABSOLUTE POSITIONING
 infoLabel.place(x=0, y=wHeight-31, width=wWidth-1, height=30)
